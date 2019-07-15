@@ -56,7 +56,7 @@ public class Board implements Cloneable {
 	}
 
 	@Override
-	protected Object clone() throws CloneNotSupportedException {
+	protected Board clone() throws CloneNotSupportedException {
 		Stone field[][] = new Stone[MAX_SIZE][MAX_SIZE];
 		
 		for (int x = 0; x < MAX_SIZE; x++) {

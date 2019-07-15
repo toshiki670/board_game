@@ -25,9 +25,7 @@ public final class Stone implements Cloneable {
   }
 
   @Override
-  protected Object clone() throws CloneNotSupportedException {
+  protected Stone clone() throws CloneNotSupportedException {
     return new Stone(this.player);
   }
-
-
 }
