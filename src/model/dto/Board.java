@@ -40,6 +40,10 @@ public class Board implements Cloneable {
   }
 
   public void turnOver(int x, int y) {
+    if (!isWithinRange(x, y) || this.field[x][y] == null) {
+      throw new IllegalArgumentException("Out of range");
+    }
+    
     this.field[x][y].turnOver();
   }
 
@@ -48,7 +52,8 @@ public class Board implements Cloneable {
 
     for (int x = 0; x < MAX_SIZE; x++) {
       for (int y = 0; y < MAX_SIZE; y++) {
-        if (field[x][y].getPlayer() == player) {
+        Stone stone = field[x][y];
+        if (stone != null && stone.getPlayer() == player) {
           result++;
         }
       }
