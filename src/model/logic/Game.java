@@ -1,4 +1,3 @@
-
 package model.logic;
 
 import java.util.Collections;
