@@ -12,7 +12,7 @@ public class Board implements Cloneable {
     this(new Stone[MAX_SIZE][MAX_SIZE]);
   }
 
-  public Board(Stone field[][]) {
+  private Board(Stone field[][]) {
     this.field = field;
   }
 
