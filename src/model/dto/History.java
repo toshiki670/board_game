@@ -10,7 +10,7 @@ public final class History implements Cloneable {
 
   public History(Player player, Board board) {
     this.player = player;
-
+    this.board = board.clone();
   }
 
 
@@ -18,21 +18,9 @@ public final class History implements Cloneable {
     return player;
   }
 
-
-  public void setPlayer(Player player) {
-    this.player = player;
-  }
-
-
   public Board getBoard() {
-    return board;
+    return board.clone();
   }
-
-
-  public void setBoard(Board board) {
-    this.board = board;
-  }
-
 
   @Override
   protected History clone() throws CloneNotSupportedException {

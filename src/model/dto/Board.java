@@ -66,12 +66,12 @@ public class Board implements Cloneable {
   }
 
   @Override
-  protected Board clone() throws CloneNotSupportedException {
+  protected Board clone() {
     Stone field[][] = new Stone[MAX_SIZE][MAX_SIZE];
 
     for (int x = 0; x < MAX_SIZE; x++) {
       for (int y = 0; y < MAX_SIZE; y++) {
-        field[x][y] = (Stone) this.field[x][y].clone();
+        field[x][y] = this.field[x][y].clone();
       }
     }
 

@@ -1,8 +1,6 @@
 package model.dto;
 
-import model.player.DarkPlayer;
 import model.player.Player;
-import model.player.WhitePlayer;
 
 public final class Stone implements Cloneable {
   private Player player;
@@ -16,16 +14,11 @@ public final class Stone implements Cloneable {
   }
 
   public void turnOver() {
-    if (player == DarkPlayer.getInstance()) {
-      player = WhitePlayer.getInstance();
-    }
-    if (player == WhitePlayer.getInstance()) {
-      player = DarkPlayer.getInstance();
-    }
+    player = Player.changer(player);
   }
 
   @Override
-  protected Stone clone() throws CloneNotSupportedException {
+  protected Stone clone() {
     return new Stone(this.player);
   }
 }
