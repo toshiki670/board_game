@@ -2,7 +2,7 @@ package model.dto;
 
 import model.player.Player;
 
-public final class History implements Cloneable, Comparable<History> {
+public final class History implements Cloneable {
 
   private Player player;
 
@@ -37,12 +37,5 @@ public final class History implements Cloneable, Comparable<History> {
   @Override
   protected History clone() throws CloneNotSupportedException {
     return new History(player, board.clone());
-  }
-
-
-  @Override
-  public int compareTo(History arg0) {
-    // TODO Auto-generated method stub
-    return 0;
   }
 }
