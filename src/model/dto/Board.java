@@ -20,7 +20,11 @@ public class Board implements Cloneable {
     if (!isWithinRange(x, y)) {
       return null;
     }
-    return field[x][y].getPlayer();
+    Stone stone = field[x][y];
+    if (stone == null) {
+      return null;
+    }
+    return stone.getPlayer();
   }
 
   public Boolean isPutableStone(int x, int y) {
