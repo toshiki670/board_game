@@ -5,14 +5,12 @@ import model.player.Player;
 public final class History implements Cloneable {
 
   private Player player;
-
   private Board board;
 
   public History(Player player, Board board) {
     this.player = player;
     this.board = board.clone();
   }
-
 
   public Player getPlayer() {
     return player;

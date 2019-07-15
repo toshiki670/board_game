@@ -33,7 +33,6 @@ public final class Game {
   private Player player;
   private Boolean isPutStone;
 
-
   private Game() {
     histories = new LinkedList<>();
     board = new Board();
@@ -84,7 +83,6 @@ public final class Game {
     }
     Boolean result = false;
 
-
     for (Map.Entry<Integer, Integer> e : DIRECTION.entrySet()) {
       int addX = e.getKey();
       int addY = e.getValue();
@@ -92,10 +90,8 @@ public final class Game {
       int addedY = y + addY;
       Player current = board.getPlayerOf(addedX, addedY);
 
-      if (current != null && current != player) {
-        if (RecursivelyTurnOver(addedX, addedY, addX, addY)) {
-          result = true;
-        }
+      if (current != null && current != player && RecursivelyTurnOver(addedX, addedY, addX, addY)) {
+        result = true;
       }
     }
 
