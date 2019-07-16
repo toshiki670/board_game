@@ -51,6 +51,11 @@ public final class Game {
     return instance;
   }
 
+  public static Game resetInstance() {
+    instance = new Game();
+    return instance;
+  }
+
   public Player getPlayer() {
     return player;
   }
