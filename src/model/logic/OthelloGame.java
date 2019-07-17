@@ -20,15 +20,15 @@ import model.player.WhitePlayer;
  * @author toshiki
  * @since 1.0
  */
-public final class Game {
-  private static Game instance;
+public final class OthelloGame {
+  private static OthelloGame instance;
 
   private LinkedList<History> histories;
   private Board board;
   private Player player;
   private Boolean isPutStone;
 
-  private Game() {
+  private OthelloGame() {
     histories = new LinkedList<>();
     board = new Board();
     board.putStoneTo(new Coord(4, 4), WhitePlayer.getInstance());
@@ -40,15 +40,15 @@ public final class Game {
     isPutStone = false;
   }
 
-  public static Game getInstance() {
+  public static OthelloGame getInstance() {
     if (instance == null) {
-      instance = new Game();
+      instance = new OthelloGame();
     }
     return instance;
   }
 
-  public static Game resetInstance() {
-    instance = new Game();
+  public static OthelloGame resetInstance() {
+    instance = new OthelloGame();
     return instance;
   }
 
