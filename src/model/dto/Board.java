@@ -2,6 +2,10 @@ package model.dto;
 
 import model.player.Player;
 
+/**
+ * @author toshiki
+ *
+ */
 public class Board implements Cloneable {
   private static final Integer MIN_SIZE = 0;
   private static final Integer MAX_SIZE = 7;
@@ -16,35 +20,35 @@ public class Board implements Cloneable {
     this.field = field;
   }
 
-  public Player getPlayerOf(int x, int y) {
-    if (!isWithinRange(x, y)) {
+  public Stone getStoneOf(Coord c) {
+    if (!isWithinRange(c)) {
       return null;
     }
-    Stone stone = field[x][y];
-    if (stone == null) {
-      return null;
-    }
-    return stone.getPlayer();
+    return field[c.getX()][c.getY()];
   }
 
-  public Boolean isPutableStone(int x, int y) {
-    return isWithinRange(x, y) && field[x][y] == null;
+  public Boolean isPutableStone(Coord c) {
+    return isWithinRange(c) && field[c.getX()][c.getY()] == null;
   }
 
-  public void putStoneTo(int x, int y, Player player) {
-    if (!isPutableStone(x, y)) {
+  public void putStoneTo(Coord c, Player player) {
+    if (!isPutableStone(c)) {
       throw new IllegalArgumentException("Out of range");
     }
 
-    this.field[x][y] = new Stone(player);
+    this.field[c.getX()][c.getY()] = new Stone(player);
   }
 
-  public void turnOver(int x, int y) {
-    if (!isWithinRange(x, y) || this.field[x][y] == null) {
+  /**
+   * @deprecated このクラスに持たせるべき責務ではないため
+   * @param c
+   */
+  public void turnOver(Coord c) {
+    if (!isWithinRange(c) || this.field[c.getX()][c.getY()] == null) {
       throw new IllegalArgumentException("Out of range");
     }
     
-    this.field[x][y].turnOver();
+    this.field[c.getX()][c.getY()].turnOver();
   }
 
   public int countStoneOf(Player player) {
@@ -61,7 +65,9 @@ public class Board implements Cloneable {
     return result;
   }
 
-  private Boolean isWithinRange(int x, int y) {
+  private Boolean isWithinRange(Coord c) {
+    int x = c.getX();
+    int y = c.getY();
     return (MIN_SIZE <= x && x <= MAX_SIZE && MIN_SIZE <= y && y <= MAX_SIZE);
   }
 
