@@ -12,13 +12,16 @@ import java.util.function.UnaryOperator;
  * 座標DTO
  * <p>
  * ボードゲームに最適化した座標を扱う.<br>
- * x は横方向の座標を表す.<br>
- * y は縦方向の座標を表す.<br>
+ * また、それぞれの座標は1を最初の数字として扱う.<br>
+ * <ul>
+ * <li>x は横方向の座標を表す.</li>
+ * <li>y は縦方向の座標を表す.</li>
+ * </ul>
  * 
  * @author Toshiki
  * @since 1.0
  */
-public final class Coord {
+public final class Coord implements Cloneable {
   private int x;
   private int y;
 
@@ -26,12 +29,12 @@ public final class Coord {
   /**
    * 座標を初期化
    * 
-   * @param x
-   * @param y
+   * @param x 1から始まる整数
+   * @param y 1から始まる整数
    */
   public Coord(int x, int y) {
-    this.x = x;
-    this.y = y;
+    this.x = x - 1;
+    this.y = y - 1;
   }
 
   /**
@@ -91,6 +94,17 @@ public final class Coord {
     return this.replace(next.apply(this));
   }
 
+
+  
+  
+  /**
+   * 自身の複製
+   */
+  @Override
+  public Coord clone() {
+    // TODO Auto-generated method stub
+    return new Coord(this.x, this.y);
+  }
 
   /**
    * 上に一つ移動
