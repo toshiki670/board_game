@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 /**
- * 座標DTO
+ * 座標DTO.
  * <p>
  * ボードゲームに最適化した座標を扱う.<br>
  * また、それぞれの座標は1を最初の数字として扱う.<br>

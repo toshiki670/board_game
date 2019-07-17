@@ -15,7 +15,10 @@ import model.player.Player;
 import model.player.WhitePlayer;
 
 /**
- * 
+ * オセロを扱う基幹システム.
+ * <p>
+ * シングルトンクラス.<br>
+ * ただし、インスタンスをリセットすることが出来る.<br>
  * 
  * @author toshiki
  * @since 1.0
@@ -47,15 +50,24 @@ public final class OthelloGame {
     return instance;
   }
 
-  public static OthelloGame resetInstance() {
+  public static void resetInstance() {
     instance = new OthelloGame();
-    return instance;
   }
 
   public Player getPlayer() {
     return player;
   }
 
+  /**
+   * プレーヤーが移動した後、結果を反映.
+   * 
+   * 反映に失敗した場合、Falseを返す。
+   * <ul>
+   * <li>プレイヤーが移動していないなど.</li>
+   * </ul>
+   * 
+   * @return 結果の反映結果
+   */
   public Boolean commit() {
     if (!isPutStone) {
       return false;
@@ -66,6 +78,16 @@ public final class OthelloGame {
     return true;
   }
 
+  /**
+   * プレーヤーが移動した後、結果を取り消す.
+   * 
+   * 取り消しに失敗した場合、Falseを返す。
+   * <ul>
+   * <li>プレイヤーが移動していないなど.</li>
+   * </ul>
+   * 
+   * @return 結果の取り消し結果
+   */
   public Boolean fallback() {
     if (!isPutStone) {
       return false;
