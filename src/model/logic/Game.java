@@ -1,31 +1,27 @@
+/**
+ * (C) 2020 Toshiki.
+ */
 package model.logic;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.List;
+import java.util.function.UnaryOperator;
 import model.dto.Board;
+import model.dto.Coord;
 import model.dto.History;
+import model.dto.Stone;
 import model.player.DarkPlayer;
 import model.player.Player;
 import model.player.WhitePlayer;
 
+/**
+ * 
+ * 
+ * @author toshiki
+ * @since 1.0
+ */
 public final class Game {
   private static Game instance;
-  private static final Map<Integer, Integer> DIRECTION =
-      Collections.unmodifiableMap(new HashMap<Integer, Integer>() {
-        private static final long serialVersionUID = 6067989766198502055L;
-        {
-          put(-1, -1);
-          put(-1, 0);
-          put(-1, 1);
-          put(0, -1);
-          put(0, 1);
-          put(1, -1);
-          put(1, 0);
-          put(1, -1);
-        }
-      });
 
   private LinkedList<History> histories;
   private Board board;
@@ -35,10 +31,10 @@ public final class Game {
   private Game() {
     histories = new LinkedList<>();
     board = new Board();
-    board.putStoneTo(3, 3, WhitePlayer.getInstance());
-    board.putStoneTo(3, 4, DarkPlayer.getInstance());
-    board.putStoneTo(4, 3, DarkPlayer.getInstance());
-    board.putStoneTo(4, 4, WhitePlayer.getInstance());
+    board.putStoneTo(new Coord(4, 4), WhitePlayer.getInstance());
+    board.putStoneTo(new Coord(4, 5), DarkPlayer.getInstance());
+    board.putStoneTo(new Coord(5, 4), DarkPlayer.getInstance());
+    board.putStoneTo(new Coord(5, 5), WhitePlayer.getInstance());
     player = DarkPlayer.getInstance();
     histories.add(new History(player, board));
     isPutStone = false;
@@ -81,41 +77,39 @@ public final class Game {
     return true;
   }
 
-  public Boolean putStoneIfTurnedOver(int x, int y) {
-    if (isPutStone || !board.isPutableStone(x, y)) {
+  public Boolean putStoneIfTurnedOver(Coord c) {
+    if (isPutStone || !board.isPutableStone(c)) {
       return false;
     }
     Boolean result = false;
+    List<UnaryOperator<Coord>> direction = Coord.getAround();
 
-    for (Map.Entry<Integer, Integer> e : DIRECTION.entrySet()) {
-      int addX = e.getKey();
-      int addY = e.getValue();
-      int addedX = x + addX;
-      int addedY = y + addY;
-      Player current = board.getPlayerOf(addedX, addedY);
+    for (UnaryOperator<Coord> d : direction) {
+      Coord checker = c.clone().moveTo(d);
+      Stone current = board.getStoneOf(checker);
 
-      if (current != null && current != player && RecursivelyTurnOver(addedX, addedY, addX, addY)) {
+      if (current != null && current.getPlayer() != player && RecursivelyTurnOver(checker, d)) {
         result = true;
       }
     }
 
     if (result) {
-      board.putStoneTo(x, y, player);
+      board.putStoneTo(c, player);
       isPutStone = true;
     }
 
     return result;
   }
 
-  private Boolean RecursivelyTurnOver(int x, int y, int addX, int addY) {
-    if (board.getPlayerOf(x, y) == null) {
+  private Boolean RecursivelyTurnOver(Coord c, UnaryOperator<Coord> next) {
+    if (board.getStoneOf(c) == null) {
       return false;
     }
-    if (board.getPlayerOf(x, y) == player) {
+    if (board.getStoneOf(c).getPlayer() == player) {
       return true;
     }
-    if (RecursivelyTurnOver(x + addX, y + addY, addX, addY)) {
-      board.turnOver(x, y);
+    if (RecursivelyTurnOver(c.moveTo(next), next)) {
+      board.getStoneOf(c).turnOver();
       return true;
     } else {
       return false;
