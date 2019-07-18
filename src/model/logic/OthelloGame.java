@@ -3,6 +3,8 @@
  */
 package model.logic;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -99,42 +101,79 @@ public final class OthelloGame {
     return true;
   }
 
-  public Boolean putStoneIfTurnedOver(Coord c) {
-    if (isPutStone || !board.isPutableStone(c)) {
+  /**
+   * 
+   * 
+   * @param targeted
+   * @return
+   */
+  public Boolean didItTurnOver(Coord targeted) {
+    if (isPutStone || !board.isPutableStone(targeted)) {
       return false;
     }
     Boolean result = false;
-    List<UnaryOperator<Coord>> direction = Coord.getAround();
+    
+    for (UnaryOperator<Coord> d : OthelloGame.getAround()) {
+      Coord spot = targeted.clone().moveTo(d);
+      Stone current = board.getStoneOf(spot);
 
-    for (UnaryOperator<Coord> d : direction) {
-      Coord checker = c.clone().moveTo(d);
-      Stone current = board.getStoneOf(checker);
-
-      if (current != null && current.getPlayer() != player && RecursivelyTurnOver(checker, d)) {
+      if (current != null && current.getPlayer() != player && RecursivelyTurnOver(spot, d)) {
         result = true;
       }
     }
 
     if (result) {
-      board.putStoneTo(c, player);
+      board.putStoneTo(targeted, player);
       isPutStone = true;
     }
 
     return result;
   }
 
-  private Boolean RecursivelyTurnOver(Coord c, UnaryOperator<Coord> next) {
-    if (board.getStoneOf(c) == null) {
+  private Boolean RecursivelyTurnOver(Coord spot, UnaryOperator<Coord> next) {
+    if (board.getStoneOf(spot) == null) {
       return false;
     }
-    if (board.getStoneOf(c).getPlayer() == player) {
+    if (board.getStoneOf(spot).getPlayer() == player) {
       return true;
     }
-    if (RecursivelyTurnOver(c.moveTo(next), next)) {
-      board.getStoneOf(c).turnOver();
+    if (RecursivelyTurnOver(spot.moveTo(next), next)) {
+      board.getStoneOf(spot).turnOver();
       return true;
     } else {
       return false;
     }
+  }
+  
+  /**
+   * 鉢方向のリストを生成
+   * 
+   * @return ラムダ式のArrayList
+   */
+  @SuppressWarnings("serial")
+  private static List<UnaryOperator<Coord>> getAround() {
+    List<UnaryOperator<Coord>> around =
+        Collections.unmodifiableList(new ArrayList<UnaryOperator<Coord>>() {
+          {
+            // 上
+            add(c -> new Coord(c.getX(), c.getY() - 1));
+            // 下
+            add(c -> new Coord(c.getX(), c.getY() + 1));
+            // 左
+            add(c -> new Coord(c.getX() - 1, c.getY()));
+            // 右
+            add(c -> new Coord(c.getX() + 1, c.getY()));
+            // 左上
+            add(c -> new Coord(c.getX() - 1, c.getY() - 1));
+            // 右上
+            add(c -> new Coord(c.getX() + 1, c.getY() - 1));
+            // 左下
+            add(c -> new Coord(c.getX() - 1, c.getY() + 1));
+            // 右下
+            add(c -> new Coord(c.getX() + 1, c.getY() + 1));
+          }
+        });
+
+    return around;
   }
 }

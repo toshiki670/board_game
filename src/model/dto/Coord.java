@@ -3,9 +3,6 @@
  */
 package model.dto;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.UnaryOperator;
 
 /**
@@ -93,9 +90,6 @@ public final class Coord implements Cloneable {
   public Coord moveTo(UnaryOperator<Coord> next) {
     return this.replace(next.apply(this));
   }
-
-
-  
   
   /**
    * 自身の複製
@@ -104,117 +98,5 @@ public final class Coord implements Cloneable {
   public Coord clone() {
     // TODO Auto-generated method stub
     return new Coord(this.x, this.y);
-  }
-
-  /**
-   * 上に一つ移動
-   * 
-   * @return ラムダ式
-   */
-  private static UnaryOperator<Coord> upper() {
-    return c -> {
-      return new Coord(c.getX(), c.getY() - 1);
-    };
-  }
-
-  /**
-   * 下に一つ移動
-   * 
-   * @return ラムダ式
-   */
-  private static UnaryOperator<Coord> lower() {
-    return c -> {
-      return new Coord(c.getX(), c.getY() + 1);
-    };
-  }
-
-  /**
-   * 左に一つ移動
-   * 
-   * @return ラムダ式
-   */
-  private static UnaryOperator<Coord> left() {
-    return c -> {
-      return new Coord(c.getX() - 1, c.getY());
-    };
-  }
-
-  /**
-   * 右に一つ移動
-   * 
-   * @return ラムダ式
-   */
-  private static UnaryOperator<Coord> right() {
-    return c -> {
-      return new Coord(c.getX() + 1, c.getY());
-    };
-  }
-
-  /**
-   * 左上に一つ移動
-   * 
-   * @return ラムダ式
-   */
-  private static UnaryOperator<Coord> upperLeft() {
-    return c -> {
-      return new Coord(c.getX() - 1, c.getY() - 1);
-    };
-  }
-
-  /**
-   * 右上に一つ移動
-   * 
-   * @return ラムダ式
-   */
-  private static UnaryOperator<Coord> upperRight() {
-    return c -> {
-      return new Coord(c.getX() + 1, c.getY() - 1);
-    };
-  }
-
-  /**
-   * 左下に一つ移動
-   * 
-   * @return ラムダ式
-   */
-  private static UnaryOperator<Coord> lowerLeft() {
-    return c -> {
-      return new Coord(c.getX() - 1, c.getY() + 1);
-    };
-  }
-
-  /**
-   * 右下に一つ移動
-   * 
-   * @return ラムダ式
-   */
-  private static UnaryOperator<Coord> lowerRight() {
-    return c -> {
-      return new Coord(c.getX() + 1, c.getY() + 1);
-    };
-  }
-  
-  /**
-   * 鉢方向のリストを生成
-   * 
-   * @return ラムダ式のArrayList
-   */
-  @SuppressWarnings("serial")
-  public static List<UnaryOperator<Coord>> getAround() {
-    List<UnaryOperator<Coord>> around =
-        Collections.unmodifiableList(new ArrayList<UnaryOperator<Coord>>() {
-          {
-            add(upper());
-            add(lower());
-            add(left());
-            add(right());
-            add(upperLeft());
-            add(upperRight());
-            add(lowerLeft());
-            add(lowerRight());
-          }
-        });
-
-    return around;
   }
 }
