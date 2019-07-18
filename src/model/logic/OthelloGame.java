@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.UnaryOperator;
+import java.util.function.Consumer;
 import model.dto.Board;
 import model.dto.Coord;
 import model.dto.History;
@@ -112,8 +112,8 @@ public final class OthelloGame {
       return false;
     }
     Boolean result = false;
-    
-    for (UnaryOperator<Coord> d : OthelloGame.getAround()) {
+
+    for (Consumer<Coord> d : OthelloGame.getAround()) {
       Coord spot = targeted.clone().moveTo(d);
       Stone current = board.getStoneOf(spot);
 
@@ -130,7 +130,7 @@ public final class OthelloGame {
     return result;
   }
 
-  private Boolean RecursivelyTurnOver(Coord spot, UnaryOperator<Coord> next) {
+  private Boolean RecursivelyTurnOver(Coord spot, Consumer<Coord> next) {
     if (board.getStoneOf(spot) == null) {
       return false;
     }
@@ -144,35 +144,46 @@ public final class OthelloGame {
       return false;
     }
   }
-  
+
   /**
    * 鉢方向のリストを生成
    * 
    * @return ラムダ式のArrayList
    */
   @SuppressWarnings("serial")
-  private static List<UnaryOperator<Coord>> getAround() {
-    List<UnaryOperator<Coord>> around =
-        Collections.unmodifiableList(new ArrayList<UnaryOperator<Coord>>() {
-          {
-            // 上
-            add(c -> new Coord(c.getX(), c.getY() - 1));
-            // 下
-            add(c -> new Coord(c.getX(), c.getY() + 1));
-            // 左
-            add(c -> new Coord(c.getX() - 1, c.getY()));
-            // 右
-            add(c -> new Coord(c.getX() + 1, c.getY()));
-            // 左上
-            add(c -> new Coord(c.getX() - 1, c.getY() - 1));
-            // 右上
-            add(c -> new Coord(c.getX() + 1, c.getY() - 1));
-            // 左下
-            add(c -> new Coord(c.getX() - 1, c.getY() + 1));
-            // 右下
-            add(c -> new Coord(c.getX() + 1, c.getY() + 1));
-          }
+  private static List<Consumer<Coord>> getAround() {
+    List<Consumer<Coord>> around = Collections.unmodifiableList(new ArrayList<Consumer<Coord>>() {
+      {
+        // 上
+        add(c -> c.addY(-1));
+        // 下
+        add(c -> c.addY(+1));
+        // 左
+        add(c -> c.addX(-1));
+        // 右
+        add(c -> c.addX(+1));
+        // 左上
+        add(c -> {
+          c.addX(-1);
+          c.addY(-1);
         });
+        // 右上
+        add(c -> {
+          c.addX(+1);
+          c.addY(-1);
+        });
+        // 左下
+        add(c -> {
+          c.addX(-1);
+          c.addY(+1);
+        });
+        // 右下
+        add(c -> {
+          c.addX(+1);
+          c.addY(+1);
+        });
+      }
+    });
 
     return around;
   }

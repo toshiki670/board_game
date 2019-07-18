@@ -6,6 +6,7 @@ package model.dto;
 import static org.junit.jupiter.api.Assertions.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.function.Consumer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -103,6 +104,24 @@ class CoordTest {
     assertAll("置き換え対象の値が変わっていないこと", () -> assertEquals(0, replaceSource.getX()),
         () -> assertEquals(0, replaceSource.getY()));
 
+  }
+  
+  @Test
+  void moveTo_0001() throws Exception {
+    Coord testInstance = new Coord(1, 100);
+    Consumer<Coord> testLambda = c -> {
+      c.addX(100);
+      c.addY(-100);
+    };
+    
+    assertAll("テスト対象の初期値", () -> assertEquals(0, testInstance.getX()),
+        () -> assertEquals(99, testInstance.getY())); 
+    
+    testInstance.moveTo(testLambda);
+    
+    assertAll("テスト対象の移動後の確認", () -> assertEquals(100, testInstance.getX()),
+        () -> assertEquals(-1, testInstance.getY())); 
+    
   }
 
 }

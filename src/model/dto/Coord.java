@@ -3,7 +3,7 @@
  */
 package model.dto;
 
-import java.util.function.UnaryOperator;
+import java.util.function.Consumer;
 
 /**
  * 座標DTO.
@@ -24,7 +24,7 @@ public final class Coord implements Cloneable {
 
   
   /**
-   * 座標を初期化
+   * 座標を初期化.
    * 
    * @param x 1から始まる整数
    * @param y 1から始まる整数
@@ -35,16 +35,14 @@ public final class Coord implements Cloneable {
   }
 
   /**
-   * 座標が含まれるテキストを分解して初期化
+   * 座標が含まれるテキストを分解して初期化.
    * 
    * @param both
    */
-  public Coord(String both) {
-
-  }
+  public Coord(String both) {}
 
   /**
-   * 文字列型の座標を整数に変換して初期化
+   * 文字列型の座標を整数に変換して初期化.
    * 
    * @param x
    * @param y
@@ -52,16 +50,43 @@ public final class Coord implements Cloneable {
   public Coord(String x, String y) {}
 
   /**
-   * 横方向の座標を取得
+   * 横方向の座標に加算.
+   * 
+   * @param x the x to set
+   */
+  public void addX(int x) {
+    this.x += x;
+  }
+
+  /**
+   * 縦方向の座標に加算.
+   * 
+   * @param y the y to set
+   */
+  public void addY(int y) {
+    this.y += y;
+  }
+
+  /**
+   * 自身の複製
+   */
+  @Override
+  public Coord clone() {
+    // TODO Auto-generated method stub
+    return new Coord(this.x, this.y);
+  }
+
+  /**
+   * 横方向の座標を取得.
    * 
    * @return 横方向
    */
   public int getX() {
     return x;
   }
-
+  
   /**
-   * 縦方向の座標を取得
+   * 縦方向の座標を取得.
    * 
    * @return 縦方向
    */
@@ -70,33 +95,26 @@ public final class Coord implements Cloneable {
   }
 
   /**
-   * 引数の座標に置き換える
+   * パラメータに与えられたラムダ式に基づき座標を移動.
+   * 
+   * @param next ラムダ式
+   * @return 自身を返す
+   */
+  public Coord moveTo(Consumer<Coord> next) {
+    next.accept(this);
+    return this;
+  }
+
+  /**
+   * 引数の座標に置き換える.
    * 
    * @param coord
    * @return 自身を返す
+   * @deprecated
    */
   private Coord replace(Coord coord) {
     this.x = coord.getX();
     this.y = coord.getY();
     return this;
-  }
-
-  /**
-   * パラメータに与えられたラムダ式に基づき座標を移動
-   * 
-   * @param next ラムダ式
-   * @return 自身を返す
-   */
-  public Coord moveTo(UnaryOperator<Coord> next) {
-    return this.replace(next.apply(this));
-  }
-  
-  /**
-   * 自身の複製
-   */
-  @Override
-  public Coord clone() {
-    // TODO Auto-generated method stub
-    return new Coord(this.x, this.y);
   }
 }
