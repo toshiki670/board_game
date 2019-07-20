@@ -30,11 +30,11 @@ public class Board<T extends Cell> implements Cloneable {
   public Board(int boardSize) {
     this(boardSize, boardSize);
   }
-  
+
   /**
    * 指定したサイズでボードのサイズを指定.
    * 
-   * @param horizontalBoardSize 
+   * @param horizontalBoardSize
    * @param verticalBoardSize
    */
   public Board(int horizontalBoardSize, int verticalBoardSize) {
@@ -50,6 +50,15 @@ public class Board<T extends Cell> implements Cloneable {
    */
   private Board(ArrayList<ArrayList<T>> field) {
     this.field = field;
+  }
+
+  /**
+   * ボード上の情報を取得
+   * 
+   * @return field
+   */
+  protected ArrayList<ArrayList<T>> getField() {
+    return field;
   }
 
   /**
@@ -98,25 +107,6 @@ public class Board<T extends Cell> implements Cloneable {
   }
 
   /**
-   * 自身の複製.
-   * <p>
-   * TODO: 要テスト。
-   */
-  @Override
-  protected Board<T> clone() {
-    ArrayList<ArrayList<T>> newField = new ArrayList<ArrayList<T>>();
-
-    for (ArrayList<T> within : field) {
-      ArrayList<T> newWithin = new ArrayList<T>();
-      for (T cell : within) {
-        newWithin.add(cell);
-      }
-      newField.add(newWithin);
-    }
-    return new Board<T>(newField);
-  }
-
-  /**
    * 引数の座標が範囲内かどうかを判定.
    * 
    * @param origin
@@ -162,5 +152,24 @@ public class Board<T extends Cell> implements Cloneable {
         }
       }
     };
+  }
+
+  /**
+   * 自身の複製.
+   * <p>
+   * TODO: 要テスト。
+   */
+  @Override
+  protected Board<T> clone() {
+    ArrayList<ArrayList<T>> newField = new ArrayList<ArrayList<T>>();
+
+    for (ArrayList<T> within : field) {
+      ArrayList<T> newWithin = new ArrayList<T>();
+      for (T cell : within) {
+        newWithin.add(cell);
+      }
+      newField.add(newWithin);
+    }
+    return new Board<T>(newField);
   }
 }
