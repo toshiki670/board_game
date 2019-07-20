@@ -31,7 +31,7 @@ public final class OthelloGame {
   private LinkedList<History> histories;
   private Board board;
   private Player player;
-  private Boolean isPutStone;
+  private Boolean isStateOfPutPlace;
 
   private OthelloGame() {
     histories = new LinkedList<>();
@@ -42,7 +42,7 @@ public final class OthelloGame {
     board.putStoneTo(new Coord(5, 5), WhitePlayer.getInstance());
     player = DarkPlayer.getInstance();
     histories.add(new History(player, board));
-    isPutStone = false;
+    isStateOfPutPlace = false;
   }
 
   public static OthelloGame getInstance() {
@@ -60,10 +60,22 @@ public final class OthelloGame {
     return player;
   }
 
+  
+  /**
+   * プレイヤーがコマの設置状況を返す.
+   * <p>
+   * コマを置いていた場合、Trueを返す.
+   * 
+   * @return
+   */
+  public Boolean isStateOfPutPlace() {
+    return this.isStateOfPutPlace;
+  }
+
   /**
    * プレーヤーが移動した後、結果を反映.
    * 
-   * 反映に失敗した場合、Falseを返す。
+   * 石を置いていない場合、Falseを返す。
    * <ul>
    * <li>プレイヤーが移動していないなど.</li>
    * </ul>
@@ -71,19 +83,19 @@ public final class OthelloGame {
    * @return 結果の反映結果
    */
   public Boolean commit() {
-    if (!isPutStone) {
+    if (!isStateOfPutPlace) {
       return false;
     }
     player = Player.changer(player);
     histories.add(new History(player, board));
-    isPutStone = false;
+    isStateOfPutPlace = false;
     return true;
   }
 
   /**
    * プレーヤーが移動した後、結果を取り消す.
    * 
-   * 取り消しに失敗した場合、Falseを返す。
+   * 石を置いていない場合、Falseを返す。
    * <ul>
    * <li>プレイヤーが移動していないなど.</li>
    * </ul>
@@ -91,54 +103,64 @@ public final class OthelloGame {
    * @return 結果の取り消し結果
    */
   public Boolean fallback() {
-    if (!isPutStone) {
+    if (!isStateOfPutPlace) {
       return false;
     }
     History h = histories.getLast();
     player = h.getPlayer();
     board = h.getBoard();
-    isPutStone = false;
+    isStateOfPutPlace = false;
     return true;
   }
 
   /**
+   * オセロの石を置く.
+   * <p>
+   * オセロの石を置き、"turnOverOpponentsStone()"を呼び出して相手の石をひっくり返す。
+   * 相手の石をひっくり返せた場合、インスタンスメソッドのisPutStoneをtrueに設定し、 Commitを可能とする。
    * 
-   * 
-   * @param targeted
-   * @return
+   * @param target 石を置く場所
    */
-  public Boolean didItTurnOver(Coord targeted) {
-    if (isPutStone || !board.isPutableStone(targeted)) {
-      return false;
+  public void putStone(Coord target) {
+    
+    // 石を置いたことがある場合、且つ石が置けない場合は何もしない
+    if (this.isStateOfPutPlace || !board.isPutableStone(target)) {
+      return;
     }
-    Boolean result = false;
+    
+    OthelloGame.getEightDirections().forEach(direction -> {
+      Coord point = target.clone().moveTo(direction);
+      Stone current = board.getStoneOf(point);
 
-    for (Consumer<Coord> d : OthelloGame.getAround()) {
-      Coord spot = targeted.clone().moveTo(d);
-      Stone current = board.getStoneOf(spot);
-
-      if (current != null && current.getPlayer() != player && RecursivelyTurnOver(spot, d)) {
-        result = true;
+      if (current != null && current.getPlayer() != player
+          && turnOverOpponentsStone(point, direction)) {
+        this.isStateOfPutPlace = true;
       }
-    }
+    });
 
-    if (result) {
-      board.putStoneTo(targeted, player);
-      isPutStone = true;
+    if (this.isStateOfPutPlace) {
+      board.putStoneTo(target, player);
     }
-
-    return result;
   }
 
-  private Boolean RecursivelyTurnOver(Coord spot, Consumer<Coord> next) {
-    if (board.getStoneOf(spot) == null) {
+  /**
+   * nextの方向にpointを移動し、自分のコマだった場合は相手の駒をひっくり返す.
+   * <p>
+   * ひっくり返せた場合、Trueを返す.
+   * 
+   * @param point
+   * @param next 
+   * @return 相手のコマをひっくり返した場合、trueを返す
+   */
+  private Boolean turnOverOpponentsStone(Coord point, Consumer<Coord> next) {
+    if (board.getStoneOf(point) == null) {
       return false;
     }
-    if (board.getStoneOf(spot).getPlayer() == player) {
+    if (board.getStoneOf(point).getPlayer() == player) {
       return true;
     }
-    if (RecursivelyTurnOver(spot.moveTo(next), next)) {
-      board.getStoneOf(spot).turnOver();
+    if (turnOverOpponentsStone(point.moveTo(next), next)) {
+      board.getStoneOf(point).turnOver();
       return true;
     } else {
       return false;
@@ -151,8 +173,8 @@ public final class OthelloGame {
    * @return ラムダ式のArrayList
    */
   @SuppressWarnings("serial")
-  private static List<Consumer<Coord>> getAround() {
-    List<Consumer<Coord>> around = Collections.unmodifiableList(new ArrayList<Consumer<Coord>>() {
+  private static List<Consumer<Coord>> getEightDirections() {
+    List<Consumer<Coord>> result = Collections.unmodifiableList(new ArrayList<Consumer<Coord>>() {
       {
         // 上
         add(c -> c.addY(-1));
@@ -185,6 +207,6 @@ public final class OthelloGame {
       }
     });
 
-    return around;
+    return result;
   }
 }
