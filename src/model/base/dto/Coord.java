@@ -21,13 +21,12 @@ import java.util.function.Consumer;
 public final class Coord implements Cloneable {
   private int horizontal;
   private int vertical;
-
   
   /**
    * 座標を初期化.
    * 
-   * @param x 1から始まる整数
-   * @param y 1から始まる整数
+   * @param horizontal 1から始まる整数
+   * @param vertical 1から始まる整数
    */
   public Coord(int horizontal, int vertical) {
     this.horizontal = horizontal;
@@ -44,8 +43,8 @@ public final class Coord implements Cloneable {
   /**
    * 文字列型の座標を整数に変換して初期化.
    * 
-   * @param x
-   * @param y
+   * @param horizontal
+   * @param vertical
    */
   public Coord(String horizontal, String vertical) {}
 

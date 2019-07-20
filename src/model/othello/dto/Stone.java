@@ -16,21 +16,14 @@ import model.base.dto.State;
  * @since 1.0
  */
 public final class Stone implements Cell {
-  private State darkSurface;
-  private State whiteSurface;
   private State currentSurface;
-
 
   /**
    * 石のインスタンスを生成
    * 
-   * @param darkSurface
-   * @param whiteSurface
    * @param currentSurface
    */
-  public Stone(State darkSurface, State whiteSurface, State currentSurface) {
-    this.darkSurface = darkSurface;
-    this.whiteSurface = whiteSurface;
+  public Stone(State currentSurface) {
     this.currentSurface = currentSurface;
   }
 
@@ -44,16 +37,16 @@ public final class Stone implements Cell {
    */
   @Override
   public void callMethod() {
-    if (currentSurface == darkSurface) {
-      currentSurface = whiteSurface;
+    if (currentSurface == DarkState.getInstance()) {
+      currentSurface = WhiteState.getInstance();
     }
-    if (currentSurface == whiteSurface) {
-      currentSurface = darkSurface;
+    if (currentSurface == WhiteState.getInstance()) {
+      currentSurface = DarkState.getInstance();
     }
   }
 
   @Override
   protected Stone clone() {
-    return new Stone(darkSurface, whiteSurface, currentSurface);
+    return new Stone(currentSurface);
   }
 }
