@@ -9,12 +9,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import model.base.dto.Coord;
-import model.base.dto.History;
+import model.base.dto.State;
 import model.othello.dto.DarkState;
 import model.othello.dto.OthelloBoard;
+import model.othello.dto.OthelloHistory;
 import model.othello.dto.Stone;
 import model.othello.dto.WhiteState;
-import model.othello.player.Player;
 
 /**
  * オセロを扱う基幹システム.
@@ -28,22 +28,25 @@ import model.othello.player.Player;
 public final class OthelloGame {
   private static OthelloGame instance;
 
-  private LinkedList<History> histories;
+  private LinkedList<OthelloHistory> histories;
   private OthelloBoard board;
-  private Player player;
   private Boolean isStateOfPutPlace;
+  private State currentState;
+
 
   private OthelloGame() {
-    histories = new LinkedList<>();
     board = new OthelloBoard();
-    board.putStoneTo(new Coord(4, 4), WhiteState.getInstance());
-    board.putStoneTo(new Coord(4, 5), DarkState.getInstance());
-    board.putStoneTo(new Coord(5, 4), DarkState.getInstance());
-    board.putStoneTo(new Coord(5, 5), WhiteState.getInstance());
-    board.putStoneTo(origin, stone);
+
+    Stone whiteSurface = new Stone(WhiteState.getInstance());
+    board.putStoneTo(new Coord(4, 4), whiteSurface);
+    board.putStoneTo(new Coord(5, 5), whiteSurface);
     
-    player = DarkState.getInstance();
-    histories.add(new History(player, board));
+    Stone darkSurface = new Stone(DarkState.getInstance());
+    board.putStoneTo(new Coord(4, 5), darkSurface);
+    board.putStoneTo(new Coord(5, 4), darkSurface);
+
+    currentState = DarkState.getInstance();
+    histories.add(new OthelloHistory(board, currentState));
     isStateOfPutPlace = false;
   }
 
@@ -58,11 +61,11 @@ public final class OthelloGame {
     instance = new OthelloGame();
   }
 
-  public Player getPlayer() {
-    return player;
+  public State getState() {
+    return currentState;
   }
 
-  
+
   /**
    * プレイヤーがコマの設置状況を返す.
    * <p>
@@ -75,12 +78,9 @@ public final class OthelloGame {
   }
 
   /**
-   * プレーヤーが移動した後、結果を反映.
-   * 
-   * 石を置いていない場合、Falseを返す。
-   * <ul>
-   * <li>プレイヤーが移動していないなど.</li>
-   * </ul>
+   * プレーヤーが石を置いた後、結果を反映.
+   * <p>
+   * 石を置いていない場合、Falseを返す.
    * 
    * @return 結果の反映結果
    */
@@ -88,8 +88,8 @@ public final class OthelloGame {
     if (!isStateOfPutPlace) {
       return false;
     }
-    player = Player.changer(player);
-    histories.add(new History(player, board));
+    changeState();
+    histories.add(new OthelloHistory(board, currentState));
     isStateOfPutPlace = false;
     return true;
   }
@@ -108,9 +108,9 @@ public final class OthelloGame {
     if (!isStateOfPutPlace) {
       return false;
     }
-    History h = histories.getLast();
-    player = h.getPlayer();
+    OthelloHistory h = histories.getLast();
     board = h.getBoard();
+    currentState = h.getCurrentState();
     isStateOfPutPlace = false;
     return true;
   }
@@ -124,24 +124,24 @@ public final class OthelloGame {
    * @param target 石を置く場所
    */
   public void putStone(Coord target) {
-    
+
     // 石を置いたことがある場合、且つ石が置けない場合は何もしない
     if (this.isStateOfPutPlace || !board.isPutableStone(target)) {
       return;
     }
-    
+
     OthelloGame.getEightDirections().forEach(direction -> {
       Coord point = target.clone().moveTo(direction);
       Stone current = board.getStoneOf(point);
 
-      if (current != null && current.getPlayer() != player
+      if (current != null && current.getState() != currentState
           && turnOverOpponentsStone(point, direction)) {
         this.isStateOfPutPlace = true;
       }
     });
 
     if (this.isStateOfPutPlace) {
-      board.putStoneTo(target, player);
+      board.putStoneTo(target, new Stone(currentState));
     }
   }
 
@@ -151,21 +151,30 @@ public final class OthelloGame {
    * ひっくり返せた場合、Trueを返す.
    * 
    * @param point
-   * @param next 
+   * @param next
    * @return 相手のコマをひっくり返した場合、trueを返す
    */
   private Boolean turnOverOpponentsStone(Coord point, Consumer<Coord> next) {
     if (board.getStoneOf(point) == null) {
       return false;
     }
-    if (board.getStoneOf(point).getPlayer() == player) {
+    if (board.getStoneOf(point).getState() == currentState) {
       return true;
     }
     if (turnOverOpponentsStone(point.moveTo(next), next)) {
-      board.getStoneOf(point).turnOver();
+      board.getStoneOf(point).callMethod();
       return true;
     } else {
       return false;
+    }
+  }
+  
+  private void changeState() {
+    if (currentState == DarkState.getInstance()) {
+      currentState = WhiteState.getInstance();
+    }
+    if (currentState == WhiteState.getInstance()) {
+      currentState = DarkState.getInstance();
     }
   }
 

@@ -3,7 +3,6 @@
  */
 package model.othello.dto;
 
-import model.base.dto.Board;
 import model.base.dto.History;
 import model.base.dto.State;
 
@@ -17,15 +16,15 @@ public final class OthelloHistory extends History<Stone> {
   /**
    * @param board
    */
-  public OthelloHistory(Board<Stone> board, State currentState) {
+  public OthelloHistory(OthelloBoard board, State currentState) {
     super(board);
     this.currentState = currentState;
   }
 
 
   @Override
-  public Board<Stone> getBoard() {
-    return super.getBoard();
+  public OthelloBoard getBoard() {
+    return (OthelloBoard) super.getBoard();
   }
   
 

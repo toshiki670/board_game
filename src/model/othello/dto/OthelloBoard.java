@@ -34,7 +34,7 @@ public class OthelloBoard extends Board<Stone> {
    * @param origin
    * @return 石が存在しない場合、又は範囲外の場合はNull
    */
-  public Cell getStoneOf(Coord origin) {
+  public Stone getStoneOf(Coord origin) {
     return super.getCellOf(origin);
   }
 
