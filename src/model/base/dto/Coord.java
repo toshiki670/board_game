@@ -1,7 +1,7 @@
 /**
  * (C) 2020 Toshiki.
  */
-package model.othello.dto;
+package model.base.dto;
 
 import java.util.function.Consumer;
 
@@ -30,8 +30,8 @@ public final class Coord implements Cloneable {
    * @param y 1から始まる整数
    */
   public Coord(int x, int y) {
-    this.x = x - 1;
-    this.y = y - 1;
+    this.x = x;
+    this.y = y;
   }
 
   /**
