@@ -64,7 +64,7 @@ public class Board<T extends Cell> implements Cloneable {
   /**
    * 座標の位置の要素を取得.
    * 
-   * @param c
+   * @param origin
    * @return 要素が存在しない場合、又は範囲外の場合はNull
    */
   public T getCellOf(Coord origin) {
@@ -82,8 +82,8 @@ public class Board<T extends Cell> implements Cloneable {
    * 
    * 置けなかったら、例外を投げる IllegalArgumentException
    * 
-   * @param c
-   * @param player
+   * @param origin
+   * @param element
    */
   public void putCellTo(Coord origin, T element) throws IllegalArgumentException {
     if (!isPutable(origin)) {
@@ -96,7 +96,7 @@ public class Board<T extends Cell> implements Cloneable {
   /**
    * 要素が置けるかどうかを判定.
    * 
-   * @param c
+   * @param origin
    * @return Trueは要素を置くことが出来る
    */
   public Boolean isPutable(Coord origin) {
@@ -109,7 +109,8 @@ public class Board<T extends Cell> implements Cloneable {
   /**
    * 引数の座標が範囲内かどうかを判定.
    * 
-   * @param origin
+   * @param h
+   * @param v
    * @return 真偽
    */
   private Boolean isWithinRange(int h, int v) {

@@ -40,6 +40,8 @@ public final class OthelloGame {
     board.putStoneTo(new Coord(4, 5), DarkState.getInstance());
     board.putStoneTo(new Coord(5, 4), DarkState.getInstance());
     board.putStoneTo(new Coord(5, 5), WhiteState.getInstance());
+    board.putStoneTo(origin, stone);
+    
     player = DarkState.getInstance();
     histories.add(new History(player, board));
     isStateOfPutPlace = false;
