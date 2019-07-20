@@ -11,7 +11,7 @@ package model.base.dto;
  * @author toshiki
  * @since 1.0
  */
-public final class History<T extends Cell> implements Cloneable {
+public class History<T extends Cell> implements Cloneable {
   private Board<T> board;
 
   protected History(Board<T> board) {
