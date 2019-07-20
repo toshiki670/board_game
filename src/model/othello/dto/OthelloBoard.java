@@ -31,7 +31,7 @@ public class OthelloBoard extends Board<Stone> {
   /**
    * 座標の位置の石を取得.
    * 
-   * @param c
+   * @param origin
    * @return 石が存在しない場合、又は範囲外の場合はNull
    */
   public Cell getStoneOf(Coord origin) {
@@ -41,7 +41,7 @@ public class OthelloBoard extends Board<Stone> {
   /**
    * 石が置けるかどうかを判定.
    * 
-   * @param c
+   * @param origin
    * @return Trueは石を置くことが出来る
    */
   public Boolean isPutableStone(Coord origin) {
@@ -53,8 +53,8 @@ public class OthelloBoard extends Board<Stone> {
    * 
    * 置けなかったら、例外を投げる IllegalArgumentException
    * 
-   * @param c
-   * @param player
+   * @param origin
+   * @param stone
    */
   public void putStoneTo(Coord origin, Stone stone) throws IllegalArgumentException {
     super.putCellTo(origin, stone);
