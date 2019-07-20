@@ -11,16 +11,16 @@ import java.util.function.Consumer;
  * ボードゲームに最適化した座標を扱う.<br>
  * また、それぞれの座標は1を最初の数字として扱う.<br>
  * <ul>
- * <li>x は横方向の座標を表す.</li>
- * <li>y は縦方向の座標を表す.</li>
+ * <li>horizontal は横方向の座標を表す.</li>
+ * <li>vertical は縦方向の座標を表す.</li>
  * </ul>
  * 
  * @author Toshiki
  * @since 1.0
  */
 public final class Coord implements Cloneable {
-  private int x;
-  private int y;
+  private int horizontal;
+  private int vertical;
 
   
   /**
@@ -29,9 +29,9 @@ public final class Coord implements Cloneable {
    * @param x 1から始まる整数
    * @param y 1から始まる整数
    */
-  public Coord(int x, int y) {
-    this.x = x;
-    this.y = y;
+  public Coord(int horizontal, int vertical) {
+    this.horizontal = horizontal;
+    this.vertical = vertical;
   }
 
   /**
@@ -47,24 +47,24 @@ public final class Coord implements Cloneable {
    * @param x
    * @param y
    */
-  public Coord(String x, String y) {}
+  public Coord(String horizontal, String vertical) {}
 
   /**
    * 横方向の座標に加算.
    * 
-   * @param x the x to set
+   * @param horizontal
    */
-  public void addX(int x) {
-    this.x += x;
+  public void addH(int horizontal) {
+    this.horizontal += horizontal;
   }
 
   /**
    * 縦方向の座標に加算.
    * 
-   * @param y the y to set
+   * @param vertical
    */
-  public void addY(int y) {
-    this.y += y;
+  public void addV(int vertical) {
+    this.vertical += vertical;
   }
 
   /**
@@ -73,7 +73,7 @@ public final class Coord implements Cloneable {
   @Override
   public Coord clone() {
     // TODO Auto-generated method stub
-    return new Coord(this.x, this.y);
+    return new Coord(this.horizontal, this.vertical);
   }
 
   /**
@@ -81,8 +81,8 @@ public final class Coord implements Cloneable {
    * 
    * @return 横方向
    */
-  public int getX() {
-    return x;
+  public int getH() {
+    return horizontal;
   }
   
   /**
@@ -90,8 +90,8 @@ public final class Coord implements Cloneable {
    * 
    * @return 縦方向
    */
-  public int getY() {
-    return y;
+  public int getV() {
+    return vertical;
   }
 
   /**

@@ -69,8 +69,8 @@ public class Board<T extends Cell> implements Cloneable {
    */
   public T getCellOf(Coord origin) {
     Coord c = Board.coordFix(origin);
-    int h = c.getX();
-    int v = c.getY();
+    int h = c.getH();
+    int v = c.getV();
     if (!isWithinRange(h, v)) {
       return null;
     }
@@ -90,7 +90,7 @@ public class Board<T extends Cell> implements Cloneable {
       throw new IllegalArgumentException("Out of range");
     }
     Coord c = Board.coordFix(origin);
-    field.get(c.getX()).set(c.getY(), element);
+    field.get(c.getH()).set(c.getV(), element);
   }
 
   /**
@@ -101,8 +101,8 @@ public class Board<T extends Cell> implements Cloneable {
    */
   public Boolean isPutable(Coord origin) {
     Coord c = Board.coordFix(origin);
-    int h = c.getX();
-    int v = c.getY();
+    int h = c.getH();
+    int v = c.getV();
     return isWithinRange(h, v) && field.get(h).get(v) == null;
   }
 
@@ -128,8 +128,8 @@ public class Board<T extends Cell> implements Cloneable {
    */
   private static Coord coordFix(Coord origin) {
     return origin.clone().moveTo(c -> {
-      c.addX(-1);
-      c.addY(-1);
+      c.addH(-1);
+      c.addV(-1);
     });
   }
 

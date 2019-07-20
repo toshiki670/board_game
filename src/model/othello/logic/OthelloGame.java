@@ -8,13 +8,13 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import model.othello.dto.Board;
-import model.othello.dto.Coord;
-import model.othello.dto.History;
+import model.base.dto.Coord;
+import model.base.dto.History;
+import model.othello.dto.DarkState;
+import model.othello.dto.OthelloBoard;
 import model.othello.dto.Stone;
-import model.othello.player.DarkPlayer;
+import model.othello.dto.WhiteState;
 import model.othello.player.Player;
-import model.othello.player.WhitePlayer;
 
 /**
  * オセロを扱う基幹システム.
@@ -29,18 +29,18 @@ public final class OthelloGame {
   private static OthelloGame instance;
 
   private LinkedList<History> histories;
-  private Board board;
+  private OthelloBoard board;
   private Player player;
   private Boolean isStateOfPutPlace;
 
   private OthelloGame() {
     histories = new LinkedList<>();
-    board = new Board();
-    board.putStoneTo(new Coord(4, 4), WhitePlayer.getInstance());
-    board.putStoneTo(new Coord(4, 5), DarkPlayer.getInstance());
-    board.putStoneTo(new Coord(5, 4), DarkPlayer.getInstance());
-    board.putStoneTo(new Coord(5, 5), WhitePlayer.getInstance());
-    player = DarkPlayer.getInstance();
+    board = new OthelloBoard();
+    board.putStoneTo(new Coord(4, 4), WhiteState.getInstance());
+    board.putStoneTo(new Coord(4, 5), DarkState.getInstance());
+    board.putStoneTo(new Coord(5, 4), DarkState.getInstance());
+    board.putStoneTo(new Coord(5, 5), WhiteState.getInstance());
+    player = DarkState.getInstance();
     histories.add(new History(player, board));
     isStateOfPutPlace = false;
   }
@@ -177,32 +177,32 @@ public final class OthelloGame {
     List<Consumer<Coord>> result = Collections.unmodifiableList(new ArrayList<Consumer<Coord>>() {
       {
         // 上
-        add(c -> c.addY(-1));
+        add(c -> c.addV(-1));
         // 下
-        add(c -> c.addY(+1));
+        add(c -> c.addV(+1));
         // 左
-        add(c -> c.addX(-1));
+        add(c -> c.addH(-1));
         // 右
-        add(c -> c.addX(+1));
+        add(c -> c.addH(+1));
         // 左上
         add(c -> {
-          c.addX(-1);
-          c.addY(-1);
+          c.addH(-1);
+          c.addV(-1);
         });
         // 右上
         add(c -> {
-          c.addX(+1);
-          c.addY(-1);
+          c.addH(+1);
+          c.addV(-1);
         });
         // 左下
         add(c -> {
-          c.addX(-1);
-          c.addY(+1);
+          c.addH(-1);
+          c.addV(+1);
         });
         // 右下
         add(c -> {
-          c.addX(+1);
-          c.addY(+1);
+          c.addH(+1);
+          c.addV(+1);
         });
       }
     });
