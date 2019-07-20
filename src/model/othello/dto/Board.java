@@ -1,9 +1,9 @@
 /**
  * (C) 2020 Toshiki.
  */
-package model.dto;
+package model.othello.dto;
 
-import model.player.Player;
+import model.othello.player.Player;
 
 /**
  * ゲームのボード上を表すDTO.

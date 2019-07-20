@@ -1,20 +1,20 @@
 /**
  * (C) 2020 Toshiki.
  */
-package model.logic;
+package model.othello.logic;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import model.dto.Board;
-import model.dto.Coord;
-import model.dto.History;
-import model.dto.Stone;
-import model.player.DarkPlayer;
-import model.player.Player;
-import model.player.WhitePlayer;
+import model.othello.dto.Board;
+import model.othello.dto.Coord;
+import model.othello.dto.History;
+import model.othello.dto.Stone;
+import model.othello.player.DarkPlayer;
+import model.othello.player.Player;
+import model.othello.player.WhitePlayer;
 
 /**
  * オセロを扱う基幹システム.

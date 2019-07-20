@@ -1,7 +1,7 @@
 /**
  * (C) 2020 Toshiki.
  */
-package model.dto;
+package model.othello.dto;
 
 import java.util.function.Consumer;
 

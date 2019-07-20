@@ -1,4 +1,4 @@
-package model.player;
+package model.othello.player;
 
 public interface Player {
 

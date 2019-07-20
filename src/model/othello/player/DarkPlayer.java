@@ -1,16 +1,16 @@
-package model.player;
+package model.othello.player;
 
-public final class WhitePlayer implements Player {
-  private static WhitePlayer instance;
+public final class DarkPlayer implements Player {
+  private static DarkPlayer instance;
   private String userName;
 
-  private WhitePlayer() {
-    this.userName = "Player2";
+  private DarkPlayer() {
+    this.userName = "Player1";
   }
 
   public static Player getInstance() {
     if (instance == null) {
-      instance = new WhitePlayer();
+      instance = new DarkPlayer();
     }
     return instance;
   }
