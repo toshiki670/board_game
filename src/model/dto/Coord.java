@@ -104,17 +104,4 @@ public final class Coord implements Cloneable {
     next.accept(this);
     return this;
   }
-
-  /**
-   * 引数の座標に置き換える.
-   * 
-   * @param coord
-   * @return 自身を返す
-   * @deprecated
-   */
-  private Coord replace(Coord coord) {
-    this.x = coord.getX();
-    this.y = coord.getY();
-    return this;
-  }
 }
