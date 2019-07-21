@@ -4,6 +4,7 @@
 package model.othello.logic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,8 @@ import model.othello.dto.OthelloBoard;
 import model.othello.dto.OthelloHistory;
 import model.othello.dto.Stone;
 import model.othello.dto.WhiteState;
+import view.render.dto.CellCharHashMap;
+import view.render.dto.RenderInfo;
 
 /**
  * オセロを扱う基幹システム.
@@ -60,6 +63,29 @@ public final class OthelloGame {
   public void resetInstance() {
     instance = new OthelloGame();
   }
+
+  /**
+   * 描写用の情報を返す.
+   * 
+   * @return
+   */
+  public RenderInfo getInfo() {
+    var cellChar = new CellCharHashMap();
+    cellChar.put(DarkState.getInstance(), "●");
+    cellChar.put(WhiteState.getInstance(), "○");
+
+    var horizontalGuidChar =
+        new ArrayList<String>(Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H"));
+
+    var verticalGuidChar = new ArrayList<String>();
+    for (var i = 1; i <= 8; i++) {
+      verticalGuidChar.add(String.valueOf(i));
+    }
+
+    var info = new RenderInfo(cellChar, horizontalGuidChar, verticalGuidChar);
+    return info;
+  }
+
 
   public State getState() {
     return currentPlayerState;
