@@ -57,7 +57,7 @@ public final class OthelloGame {
     return instance;
   }
 
-  public static void resetInstance() {
+  public void resetInstance() {
     instance = new OthelloGame();
   }
 
