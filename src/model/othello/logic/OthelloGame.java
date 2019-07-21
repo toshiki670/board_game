@@ -80,7 +80,7 @@ public final class OthelloGame {
   /**
    * Boardを複製して取得
    * 
-   * @return ArrayList<ArrayList<Stone>>
+   * @return {@code Board<Stone>}
    */
   public Board<Stone> getBoard() {
     return board.clone();
@@ -141,8 +141,8 @@ public final class OthelloGame {
   /**
    * オセロの石を置く.
    * <p>
-   * オセロの石を置き、"turnOverOpponentsStone()"を呼び出して相手の石をひっくり返す。
-   * 相手の石をひっくり返せた場合、インスタンスメソッドのisPutStoneをtrueに設定し、 Commitを可能とする。
+   * オセロの石を置き、"{@code turnOverOpponentsStone()}"を呼び出して相手の石をひっくり返す。
+   * 相手の石をひっくり返せた場合、インスタンスメソッドの{@code isPutStone}をtrueに設定し、 Commitを可能とする。
    * 
    * @param target 石を置く場所
    */
