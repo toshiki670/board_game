@@ -149,7 +149,13 @@ public class Board<T extends Cell> implements Cloneable {
     return new ArrayList<ArrayList<T>>() {
       {
         for (int h = FIELD_MIN_SIZE; h < horizontalBoardSize; h++) {
-          add(new ArrayList<T>(verticalBoardSize));
+          add(new ArrayList<T>() {
+            {
+              for (int V = FIELD_MIN_SIZE; V < verticalBoardSize; V++) {
+                add(null);
+              }
+            }
+          });
         }
       }
     };

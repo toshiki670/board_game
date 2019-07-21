@@ -17,7 +17,7 @@ import model.base.dto.State;
  * @author toshiki
  * @since 1.0
  */
-public class OthelloBoard extends Board<Stone> implements Cloneable {
+public class OthelloBoard extends Board<Stone> {
   private static final Integer BOARD_SIZE = 8;
 
 
@@ -94,8 +94,8 @@ public class OthelloBoard extends Board<Stone> implements Cloneable {
    * <p>
    * TODO: 要テスト。
    */
-  @Override
-  public OthelloBoard clone() {
-    return (OthelloBoard) super.clone();
-  }
+//  @Override
+//  public OthelloBoard clone() {
+//    return (OthelloBoard) super.clone();
+//  }
 }
