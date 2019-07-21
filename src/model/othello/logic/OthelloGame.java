@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import model.base.dto.Board;
 import model.base.dto.Coord;
 import model.base.dto.State;
 import model.othello.dto.DarkState;
@@ -75,6 +76,10 @@ public final class OthelloGame {
    */
   public Boolean isStateOfPutPlace() {
     return this.isStateOfPutPlace;
+  }
+  
+  public Board<Stone> getBoard() {
+    return board;
   }
 
   /**
