@@ -1,20 +1,21 @@
 /**
  * (C) 2020 Toshiki.
  */
-package model.logic;
+package model.othello.logic;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import model.dto.Board;
-import model.dto.Coord;
-import model.dto.History;
-import model.dto.Stone;
-import model.player.DarkPlayer;
-import model.player.Player;
-import model.player.WhitePlayer;
+import model.base.dto.Board;
+import model.base.dto.Coord;
+import model.base.dto.State;
+import model.othello.dto.DarkState;
+import model.othello.dto.OthelloBoard;
+import model.othello.dto.OthelloHistory;
+import model.othello.dto.Stone;
+import model.othello.dto.WhiteState;
 
 /**
  * オセロを扱う基幹システム.
@@ -28,20 +29,25 @@ import model.player.WhitePlayer;
 public final class OthelloGame {
   private static OthelloGame instance;
 
-  private LinkedList<History> histories;
-  private Board board;
-  private Player player;
+  private LinkedList<OthelloHistory> histories;
+  private OthelloBoard board;
   private Boolean isStateOfPutPlace;
+  private State currentState;
+
 
   private OthelloGame() {
-    histories = new LinkedList<>();
-    board = new Board();
-    board.putStoneTo(new Coord(4, 4), WhitePlayer.getInstance());
-    board.putStoneTo(new Coord(4, 5), DarkPlayer.getInstance());
-    board.putStoneTo(new Coord(5, 4), DarkPlayer.getInstance());
-    board.putStoneTo(new Coord(5, 5), WhitePlayer.getInstance());
-    player = DarkPlayer.getInstance();
-    histories.add(new History(player, board));
+    board = new OthelloBoard();
+
+    Stone whiteSurface = new Stone(WhiteState.getInstance());
+    board.putStoneTo(new Coord(4, 4), whiteSurface);
+    board.putStoneTo(new Coord(5, 5), whiteSurface);
+
+    Stone darkSurface = new Stone(DarkState.getInstance());
+    board.putStoneTo(new Coord(4, 5), darkSurface);
+    board.putStoneTo(new Coord(5, 4), darkSurface);
+
+    currentState = DarkState.getInstance();
+    histories.add(new OthelloHistory(board, currentState));
     isStateOfPutPlace = false;
   }
 
@@ -52,15 +58,15 @@ public final class OthelloGame {
     return instance;
   }
 
-  public static void resetInstance() {
+  public void resetInstance() {
     instance = new OthelloGame();
   }
 
-  public Player getPlayer() {
-    return player;
+  public State getState() {
+    return currentState;
   }
 
-  
+
   /**
    * プレイヤーがコマの設置状況を返す.
    * <p>
@@ -73,12 +79,32 @@ public final class OthelloGame {
   }
 
   /**
-   * プレーヤーが移動した後、結果を反映.
+   * Boardを複製して取得
    * 
-   * 石を置いていない場合、Falseを返す。
-   * <ul>
-   * <li>プレイヤーが移動していないなど.</li>
-   * </ul>
+   * @return ArrayList<ArrayList<Stone>>
+   */
+  public Board<Stone> getBoard() {
+    return board.clone();
+  }
+
+  public Boolean isEnd() {
+    Boolean isFullOfTheBoard = true;
+
+    exitLoop: for (var vertical : board.getField()) {
+      for (var stone : vertical) {
+        if (stone == null) {
+          isFullOfTheBoard = false;
+          break exitLoop;
+        }
+      }
+    }
+    return isFullOfTheBoard;
+  }
+
+  /**
+   * プレーヤーが石を置いた後、結果を反映.
+   * <p>
+   * 石を置いていない場合、Falseを返す.
    * 
    * @return 結果の反映結果
    */
@@ -86,8 +112,8 @@ public final class OthelloGame {
     if (!isStateOfPutPlace) {
       return false;
     }
-    player = Player.changer(player);
-    histories.add(new History(player, board));
+    changeState();
+    histories.add(new OthelloHistory(board, currentState));
     isStateOfPutPlace = false;
     return true;
   }
@@ -106,9 +132,9 @@ public final class OthelloGame {
     if (!isStateOfPutPlace) {
       return false;
     }
-    History h = histories.getLast();
-    player = h.getPlayer();
+    OthelloHistory h = histories.getLast();
     board = h.getBoard();
+    currentState = h.getCurrentState();
     isStateOfPutPlace = false;
     return true;
   }
@@ -122,24 +148,24 @@ public final class OthelloGame {
    * @param target 石を置く場所
    */
   public void putStone(Coord target) {
-    
+
     // 石を置いたことがある場合、且つ石が置けない場合は何もしない
     if (this.isStateOfPutPlace || !board.isPutableStone(target)) {
       return;
     }
-    
+
     OthelloGame.getEightDirections().forEach(direction -> {
       Coord point = target.clone().moveTo(direction);
       Stone current = board.getStoneOf(point);
 
-      if (current != null && current.getPlayer() != player
+      if (current != null && current.getState() != currentState
           && turnOverOpponentsStone(point, direction)) {
         this.isStateOfPutPlace = true;
       }
     });
 
     if (this.isStateOfPutPlace) {
-      board.putStoneTo(target, player);
+      board.putStoneTo(target, new Stone(currentState));
     }
   }
 
@@ -149,21 +175,30 @@ public final class OthelloGame {
    * ひっくり返せた場合、Trueを返す.
    * 
    * @param point
-   * @param next 
+   * @param next
    * @return 相手のコマをひっくり返した場合、trueを返す
    */
   private Boolean turnOverOpponentsStone(Coord point, Consumer<Coord> next) {
     if (board.getStoneOf(point) == null) {
       return false;
     }
-    if (board.getStoneOf(point).getPlayer() == player) {
+    if (board.getStoneOf(point).getState() == currentState) {
       return true;
     }
     if (turnOverOpponentsStone(point.moveTo(next), next)) {
-      board.getStoneOf(point).turnOver();
+      board.getStoneOf(point).callMethod();
       return true;
     } else {
       return false;
+    }
+  }
+
+  private void changeState() {
+    if (currentState == DarkState.getInstance()) {
+      currentState = WhiteState.getInstance();
+    }
+    if (currentState == WhiteState.getInstance()) {
+      currentState = DarkState.getInstance();
     }
   }
 
@@ -177,32 +212,32 @@ public final class OthelloGame {
     List<Consumer<Coord>> result = Collections.unmodifiableList(new ArrayList<Consumer<Coord>>() {
       {
         // 上
-        add(c -> c.addY(-1));
+        add(c -> c.addV(-1));
         // 下
-        add(c -> c.addY(+1));
+        add(c -> c.addV(+1));
         // 左
-        add(c -> c.addX(-1));
+        add(c -> c.addH(-1));
         // 右
-        add(c -> c.addX(+1));
+        add(c -> c.addH(+1));
         // 左上
         add(c -> {
-          c.addX(-1);
-          c.addY(-1);
+          c.addH(-1);
+          c.addV(-1);
         });
         // 右上
         add(c -> {
-          c.addX(+1);
-          c.addY(-1);
+          c.addH(+1);
+          c.addV(-1);
         });
         // 左下
         add(c -> {
-          c.addX(-1);
-          c.addY(+1);
+          c.addH(-1);
+          c.addV(+1);
         });
         // 右下
         add(c -> {
-          c.addX(+1);
-          c.addY(+1);
+          c.addH(+1);
+          c.addV(+1);
         });
       }
     });
