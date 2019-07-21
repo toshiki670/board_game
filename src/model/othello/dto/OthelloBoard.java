@@ -79,8 +79,8 @@ public class OthelloBoard extends Board<Stone> {
     ArrayList<ArrayList<Stone>> field = super.getField();
     int count = 0;
 
-    for (ArrayList<Stone> within : field) {
-      for (Stone s : within) {
+    for (ArrayList<Stone> vertical : field) {
+      for (Stone s : vertical) {
         if (s.getState() == surface) {
           count++;
         }
