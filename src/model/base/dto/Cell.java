@@ -9,7 +9,7 @@ package model.base.dto;
  * @author toshiki
  * @since 1.0
  */
-public interface Cell extends Cloneable{
+public interface Cell extends Cloneable {
 
   /**
    * Cellの状態を取得.
@@ -17,7 +17,7 @@ public interface Cell extends Cloneable{
    * @return
    */
   public State getState();
-  
+
   /**
    * Cellに対して処理を実行.
    */
