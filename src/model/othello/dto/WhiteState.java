@@ -26,5 +26,14 @@ public final class WhiteState implements State {
     }
     return instance;
   }
-
+  
+  /**
+   * インスタンスを取り除く
+   * 
+   * @return インスタンスを取り除いた自身
+   */
+  public static State removeInstance() {
+    instance = null;
+    return instance;
+  }
 }
