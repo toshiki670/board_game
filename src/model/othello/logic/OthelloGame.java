@@ -41,7 +41,7 @@ public final class OthelloGame {
     Stone whiteSurface = new Stone(WhiteState.getInstance());
     board.putStoneTo(new Coord(4, 4), whiteSurface);
     board.putStoneTo(new Coord(5, 5), whiteSurface);
-    
+
     Stone darkSurface = new Stone(DarkState.getInstance());
     board.putStoneTo(new Coord(4, 5), darkSurface);
     board.putStoneTo(new Coord(5, 4), darkSurface);
@@ -77,9 +77,28 @@ public final class OthelloGame {
   public Boolean isStateOfPutPlace() {
     return this.isStateOfPutPlace;
   }
-  
+
+  /**
+   * Boardを複製して取得
+   * 
+   * @return ArrayList<ArrayList<Stone>>
+   */
   public Board<Stone> getBoard() {
-    return board;
+    return board.clone();
+  }
+
+  public Boolean isEnd() {
+    Boolean isFullOfTheBoard = true;
+
+    exitLoop: for (var vertical : board.getField()) {
+      for (var stone : vertical) {
+        if (stone == null) {
+          isFullOfTheBoard = false;
+          break exitLoop;
+        }
+      }
+    }
+    return isFullOfTheBoard;
   }
 
   /**
@@ -173,7 +192,7 @@ public final class OthelloGame {
       return false;
     }
   }
-  
+
   private void changeState() {
     if (currentState == DarkState.getInstance()) {
       currentState = WhiteState.getInstance();

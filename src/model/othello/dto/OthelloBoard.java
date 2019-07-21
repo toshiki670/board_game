@@ -17,7 +17,7 @@ import model.base.dto.State;
  * @author toshiki
  * @since 1.0
  */
-public class OthelloBoard extends Board<Stone> {
+public class OthelloBoard extends Board<Stone> implements Cloneable {
   private static final Integer BOARD_SIZE = 8;
 
 
@@ -26,6 +26,15 @@ public class OthelloBoard extends Board<Stone> {
    */
   public OthelloBoard() {
     super(BOARD_SIZE);
+  }
+
+  /**
+   * Fieldをクローンして取得
+   * 
+   * @return
+   */
+  public ArrayList<ArrayList<Stone>> getField() {
+    return this.clone().getField();
   }
 
   /**
@@ -60,7 +69,6 @@ public class OthelloBoard extends Board<Stone> {
     super.putCellTo(origin, stone);
   }
 
-
   /**
    * 引数のプレイヤーの数を数える
    * 
@@ -79,5 +87,15 @@ public class OthelloBoard extends Board<Stone> {
       }
     }
     return count;
+  }
+
+  /**
+   * 自身の複製.
+   * <p>
+   * TODO: 要テスト。
+   */
+  @Override
+  public OthelloBoard clone() {
+    return (OthelloBoard) super.clone();
   }
 }

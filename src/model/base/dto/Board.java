@@ -57,7 +57,7 @@ public class Board<T extends Cell> implements Cloneable {
    * 
    * @return field
    */
-  protected ArrayList<ArrayList<T>> getField() {
+  public ArrayList<ArrayList<T>> getField() {
     return field;
   }
 
@@ -161,15 +161,15 @@ public class Board<T extends Cell> implements Cloneable {
    * TODO: 要テスト。
    */
   @Override
-  protected Board<T> clone() {
+  public Board<T> clone() {
     ArrayList<ArrayList<T>> newField = new ArrayList<ArrayList<T>>();
 
-    for (ArrayList<T> within : field) {
-      ArrayList<T> newWithin = new ArrayList<T>();
-      for (T cell : within) {
-        newWithin.add(cell);
+    for (ArrayList<T> vertical : field) {
+      ArrayList<T> newVertical = new ArrayList<T>();
+      for (T cell : vertical) {
+        newVertical.add(cell);
       }
-      newField.add(newWithin);
+      newField.add(newVertical);
     }
     return new Board<T>(newField);
   }
