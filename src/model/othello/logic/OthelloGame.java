@@ -32,7 +32,7 @@ public final class OthelloGame {
   private LinkedList<OthelloHistory> histories;
   private OthelloBoard board;
   private Boolean isStateOfPutPlace;
-  private State currentState;
+  private State currentPlayerState;
 
 
   private OthelloGame() {
@@ -45,9 +45,9 @@ public final class OthelloGame {
         putStoneTo(new Coord(5, 4), new Stone(DarkState.getInstance()));
       }
     };
-    histories.add(new OthelloHistory(board, currentState));
+    histories.add(new OthelloHistory(board, currentPlayerState));
     isStateOfPutPlace = false;
-    currentState = DarkState.getInstance();
+    currentPlayerState = DarkState.getInstance();
   }
 
   public static OthelloGame getInstance() {
@@ -62,7 +62,7 @@ public final class OthelloGame {
   }
 
   public State getState() {
-    return currentState;
+    return currentPlayerState;
   }
 
 
@@ -112,7 +112,7 @@ public final class OthelloGame {
       return false;
     }
     changeState();
-    histories.add(new OthelloHistory(board, currentState));
+    histories.add(new OthelloHistory(board, currentPlayerState));
     isStateOfPutPlace = false;
     return true;
   }
@@ -133,7 +133,7 @@ public final class OthelloGame {
     }
     OthelloHistory h = histories.getLast();
     board = h.getBoard();
-    currentState = h.getCurrentState();
+    currentPlayerState = h.getCurrentState();
     isStateOfPutPlace = false;
     return true;
   }
@@ -157,14 +157,14 @@ public final class OthelloGame {
       Coord point = target.clone().moveTo(direction);
       Stone current = board.getStoneOf(point);
 
-      if (current != null && current.getState() != currentState
+      if (current != null && current.getState() != currentPlayerState
           && turnOverOpponentsStone(point, direction)) {
         this.isStateOfPutPlace = true;
       }
     });
 
     if (this.isStateOfPutPlace) {
-      board.putStoneTo(target, new Stone(currentState));
+      board.putStoneTo(target, new Stone(currentPlayerState));
     }
   }
 
@@ -181,7 +181,7 @@ public final class OthelloGame {
     if (board.getStoneOf(point) == null) {
       return false;
     }
-    if (board.getStoneOf(point).getState() == currentState) {
+    if (board.getStoneOf(point).getState() == currentPlayerState) {
       return true;
     }
     if (turnOverOpponentsStone(point.moveTo(next), next)) {
@@ -192,12 +192,15 @@ public final class OthelloGame {
     }
   }
 
+  /**
+   * 現在のプレイヤーを切り替える.
+   */
   private void changeState() {
-    if (currentState == DarkState.getInstance()) {
-      currentState = WhiteState.getInstance();
+    if (currentPlayerState == DarkState.getInstance()) {
+      currentPlayerState = WhiteState.getInstance();
     }
-    if (currentState == WhiteState.getInstance()) {
-      currentState = DarkState.getInstance();
+    if (currentPlayerState == WhiteState.getInstance()) {
+      currentPlayerState = DarkState.getInstance();
     }
   }
 
