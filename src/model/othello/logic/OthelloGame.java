@@ -36,19 +36,18 @@ public final class OthelloGame {
 
 
   private OthelloGame() {
-    board = new OthelloBoard();
-
-    Stone whiteSurface = new Stone(WhiteState.getInstance());
-    board.putStoneTo(new Coord(4, 4), whiteSurface);
-    board.putStoneTo(new Coord(5, 5), whiteSurface);
-
-    Stone darkSurface = new Stone(DarkState.getInstance());
-    board.putStoneTo(new Coord(4, 5), darkSurface);
-    board.putStoneTo(new Coord(5, 4), darkSurface);
-
-    currentState = DarkState.getInstance();
+    histories = new LinkedList<OthelloHistory>();
+    board = new OthelloBoard() {
+      {
+        putStoneTo(new Coord(4, 4), new Stone(WhiteState.getInstance()));
+        putStoneTo(new Coord(5, 5), new Stone(WhiteState.getInstance()));
+        putStoneTo(new Coord(4, 5), new Stone(DarkState.getInstance()));
+        putStoneTo(new Coord(5, 4), new Stone(DarkState.getInstance()));
+      }
+    };
     histories.add(new OthelloHistory(board, currentState));
     isStateOfPutPlace = false;
+    currentState = DarkState.getInstance();
   }
 
   public static OthelloGame getInstance() {
