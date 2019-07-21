@@ -30,28 +30,26 @@ public class Main {
 
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-    
+
     OthelloGame game = OthelloGame.getInstance();
 
-    if (!game.isEnd()) {
-      
+    while (!game.isEnd()) {
+
       game.getBoard().getField().forEach(System.out::println);
-      
+
       int x = Integer.parseInt(br.readLine());
       int y = Integer.parseInt(br.readLine());
 
-      
+
       game.putStone(new Coord(x, y));
 
-      if (game.isStateOfPutPlace()) {
-        game.commit();
-
-      }
+      game.commit();
 
     }
 
 
 
+     System.out.println("end game");
   }
 
 }
